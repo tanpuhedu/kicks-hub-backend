@@ -58,6 +58,19 @@ public enum ErrorCode {
     PRODUCT_DETAIL_PRODUCT_NULL(6011, "Product detail's product is required",HttpStatus.BAD_REQUEST),
     PRODUCT_DETAIL_SIZE_NULL(6012, "Product detail's size is required",HttpStatus.BAD_REQUEST),
     PRODUCT_DETAIL_COLOR_NULL(6013, "Product detail's color is required",HttpStatus.BAD_REQUEST),
+
+    //  USER ERROR
+    USER_EXISTED(7001, "User already existed", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(7002, "User not existed", HttpStatus.NOT_FOUND),
+    USER_USERNAME_INVALID(7003, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    USER_PASSWORD_INVALID(7004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    USER_FULLNAME_BLANK(7005, "Full name is required", HttpStatus.BAD_REQUEST),
+    USER_PHONE_NULL(7006, "Phone number is required", HttpStatus.BAD_REQUEST),
+    USER_PHONE_INVALID(7007, "Phone number is not well-formed", HttpStatus.BAD_REQUEST),
+    USER_MAIL_NULL(7008, "Email is required", HttpStatus.BAD_REQUEST),
+    USER_MAIL_INVALID(7009, "Email is not well-formed", HttpStatus.BAD_REQUEST),
+    USER_STATUS_NULL(7010, "Status is required", HttpStatus.BAD_REQUEST),
+    USER_STATUS_INVALID(7011, "Status must be {min} (INACTIVE) or {max} (ACTIVE)", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;
