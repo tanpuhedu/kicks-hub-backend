@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper mapper;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> getAll() {
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
             throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = mapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhone(formatPhoneNumber(request.getPhone()));
         user.setStatus(EntityStatus.ACTIVE.getCode());
 
@@ -56,6 +59,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         mapper.update(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhone(formatPhoneNumber(request.getPhone()));
 
         return mapper.toResponse(userRepository.save(user));

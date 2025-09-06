@@ -11,6 +11,7 @@ public enum ErrorCode {
     // GLOBAL ERROR
     UNCATEGORIZED(9999, "An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR),
     KEY_INVALID(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
+    UNAUTHENTICATED(1002, "Authentication is required", HttpStatus.UNAUTHORIZED),
 
     // CATEGORY ERROR
     CATEGORY_EXISTED(2001, "Category already existed", HttpStatus.BAD_REQUEST),
@@ -71,6 +72,10 @@ public enum ErrorCode {
     USER_MAIL_INVALID(7009, "Email is not well-formed", HttpStatus.BAD_REQUEST),
     USER_STATUS_NULL(7010, "Status is required", HttpStatus.BAD_REQUEST),
     USER_STATUS_INVALID(7011, "Status must be {min} (INACTIVE) or {max} (ACTIVE)", HttpStatus.BAD_REQUEST),
+
+    //  AUTH ERROR
+    USERNAME_BLANK(8001, "Username is required", HttpStatus.BAD_REQUEST),
+    PASSWORD_NULL(8002, "Password is required", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;
