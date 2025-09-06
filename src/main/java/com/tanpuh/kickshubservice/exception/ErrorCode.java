@@ -81,6 +81,13 @@ public enum ErrorCode {
     PERMISSION_EXISTED(9001, "Permission already existed", HttpStatus.BAD_REQUEST),
     PERMISSION_NOT_FOUND(9002, "Permission not existed", HttpStatus.NOT_FOUND),
     PERMISSION_NAME_BLANK(9003, "Permission name is required", HttpStatus.BAD_REQUEST),
+
+    //  ROLE ERROR
+    ROLE_EXISTED(10001, "Role already existed", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(10002, "Role not existed", HttpStatus.NOT_FOUND),
+    ROLE_NAME_BLANK(10003, "Role name is required", HttpStatus.BAD_REQUEST),
+    ROLE_PERMISSIONS_EMPTY(10004, "Role permission id list is required", HttpStatus.BAD_REQUEST),
+    ROLE_PERMISSION_ID_NULL(10005, "Role permission id is required", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;
