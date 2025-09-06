@@ -16,6 +16,11 @@ public enum ErrorCode {
     CATEGORY_EXISTED(2001, "Category already existed", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_FOUND(2002, "Category not existed", HttpStatus.NOT_FOUND),
     CATEGORY_NAME_BLANK(2003, "Category name is required", HttpStatus.BAD_REQUEST),
+
+    //    COLOR ERROR
+    COLOR_EXISTED(3001, "Color already existed", HttpStatus.BAD_REQUEST),
+    COLOR_NOT_FOUND(3002, "Color not existed", HttpStatus.NOT_FOUND),
+    COLOR_NAME_BLANK(3003, "Color name is required", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;
