@@ -19,3 +19,8 @@ cloudinary:
   cloud_name: "dcudlkqcm"
   api_key: "734251979716821"
   api_secret: "WHzx_91QpnZwhLi0DOrxJGMJDT4"
+
+jwt:
+  signer-key: "vXzlkcYAWyTfH8+TZ3/Uncec1eaLoljAbOOBWsZQSeInpLZxYwXAehEkDuBUV5K8"
+  valid-duration: 3600 # in second
+  refreshable-duration: 36000 # in second
