@@ -76,6 +76,11 @@ public enum ErrorCode {
     //  AUTH ERROR
     USERNAME_BLANK(8001, "Username is required", HttpStatus.BAD_REQUEST),
     PASSWORD_NULL(8002, "Password is required", HttpStatus.BAD_REQUEST),
+
+    //  PERMISSION ERROR
+    PERMISSION_EXISTED(9001, "Permission already existed", HttpStatus.BAD_REQUEST),
+    PERMISSION_NOT_FOUND(9002, "Permission not existed", HttpStatus.NOT_FOUND),
+    PERMISSION_NAME_BLANK(9003, "Permission name is required", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;
