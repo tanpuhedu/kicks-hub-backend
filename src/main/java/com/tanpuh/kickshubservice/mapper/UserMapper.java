@@ -10,12 +10,14 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "phone", ignore = true)
     User toEntity(UserCreationRequest dto);
 
     UserResponse toResponse(User entity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "phone", ignore = true)
     void update(@MappingTarget User entity, UserUpdateRequest dto);
 }
