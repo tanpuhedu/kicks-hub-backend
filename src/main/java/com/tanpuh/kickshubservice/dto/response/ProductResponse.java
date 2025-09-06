@@ -3,6 +3,8 @@ package com.tanpuh.kickshubservice.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,4 +19,5 @@ public class ProductResponse {
     Integer status;
 
     CategoryResponse category;
+    List<String> imgURLs;
 }

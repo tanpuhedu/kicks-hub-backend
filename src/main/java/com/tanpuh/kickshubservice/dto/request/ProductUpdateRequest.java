@@ -1,10 +1,14 @@
 package com.tanpuh.kickshubservice.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
@@ -21,4 +25,8 @@ public class ProductUpdateRequest {
 
     @NotNull(message = "PRODUCT_CATEGORY_NULL")
     Integer categoryId;
+
+    @NotNull(message = "PRODUCT_FILES_NULL")
+    @JsonIgnore
+    List<MultipartFile> imgFiles;
 }

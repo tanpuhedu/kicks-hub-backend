@@ -36,6 +36,7 @@ public enum ErrorCode {
     PRODUCT_STATUS_INVALID
             (5006, "Product status must be {min} (INACTIVE) or {max} (ACTIVE)",HttpStatus.BAD_REQUEST),
     PRODUCT_CATEGORY_NULL(5007, "Product's category is required",HttpStatus.BAD_REQUEST),
+    PRODUCT_FILES_NULL(5008, "Image files are required",HttpStatus.BAD_REQUEST),
 
     // PRODUCT DETAIL ERROR
     PRODUCT_DETAIL_EXISTED(6001, "Product detail already existed", HttpStatus.BAD_REQUEST),

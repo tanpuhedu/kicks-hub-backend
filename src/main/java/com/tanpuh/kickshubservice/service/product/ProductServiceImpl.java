@@ -11,6 +11,7 @@ import com.tanpuh.kickshubservice.mapper.ProductMapper;
 import com.tanpuh.kickshubservice.repository.CategoryRepository;
 import com.tanpuh.kickshubservice.repository.ProductDetailRepository;
 import com.tanpuh.kickshubservice.repository.ProductRepository;
+import com.tanpuh.kickshubservice.service.cloudinary.CloudinaryService;
 import com.tanpuh.kickshubservice.utils.enums.EntityStatus;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -21,7 +22,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
     CategoryRepository categoryRepository;
     ProductDetailRepository productDetailRepository;
     ProductMapper mapper;
+    CloudinaryService cloudinaryService;
 
     @Override
     public List<ProductResponse> getAll() {
@@ -112,6 +116,7 @@ public class ProductServiceImpl implements ProductService {
         product.setSoldQuantity(0);
         product.setStatus(EntityStatus.INACTIVE.getCode());
         product.setCategory(category);
+        product.setImgURLs(uploadImagesToCloudinary(request.getImgFiles()));
 
         return mapper.toResponse(productRepository.save(product));
     }
@@ -126,6 +131,7 @@ public class ProductServiceImpl implements ProductService {
 
         mapper.update(product, request);
         product.setCategory(category);
+        product.setImgURLs(uploadImagesToCloudinary(request.getImgFiles()));
 
         return mapper.toResponse(productRepository.save(product));
     }
@@ -139,5 +145,18 @@ public class ProductServiceImpl implements ProductService {
         productDetailRepository.deleteAllByProductId(product.getId());
 
         productRepository.deleteById(id);
+    }
+
+    private List<String> uploadImagesToCloudinary(List<MultipartFile> files) {
+        List<String> imgURLs = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String url = cloudinaryService.upload(file, "images");
+
+            if (url == null)
+                throw new RuntimeException("Uploading fail");
+
+            imgURLs.add(url);
+        }
+        return imgURLs;
     }
 }
