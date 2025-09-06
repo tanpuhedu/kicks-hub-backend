@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(errorCode.getCode())
-                .message(exception.getMessage())
+                .message(errorCode.getMessage())
                 .build();
 
         return ResponseEntity.badRequest().body(apiResponse);
