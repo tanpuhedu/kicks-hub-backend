@@ -21,6 +21,11 @@ public enum ErrorCode {
     COLOR_EXISTED(3001, "Color already existed", HttpStatus.BAD_REQUEST),
     COLOR_NOT_FOUND(3002, "Color not existed", HttpStatus.NOT_FOUND),
     COLOR_NAME_BLANK(3003, "Color name is required", HttpStatus.BAD_REQUEST),
+
+    //    SIZE ERROR
+    SIZE_EXISTED(4001, "Size already existed", HttpStatus.BAD_REQUEST),
+    SIZE_NOT_FOUND(4002, "Size not existed", HttpStatus.NOT_FOUND),
+    SIZE_NAME_BLANK(4003, "Size name is required", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;
