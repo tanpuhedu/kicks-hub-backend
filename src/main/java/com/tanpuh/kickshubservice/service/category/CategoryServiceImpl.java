@@ -3,6 +3,8 @@ package com.tanpuh.kickshubservice.service.category;
 import com.tanpuh.kickshubservice.dto.request.CategoryRequest;
 import com.tanpuh.kickshubservice.dto.response.CategoryResponse;
 import com.tanpuh.kickshubservice.entity.Category;
+import com.tanpuh.kickshubservice.exception.AppException;
+import com.tanpuh.kickshubservice.exception.ErrorCode;
 import com.tanpuh.kickshubservice.mapper.CategoryMapper;
 import com.tanpuh.kickshubservice.repository.CategoryRepository;
 import lombok.AccessLevel;
@@ -30,14 +32,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse getById(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+
         return mapper.toResponse(category);
     }
 
     @Override
     public CategoryResponse create(CategoryRequest request) {
         if (categoryRepository.existsByName(request.getName()))
-            throw new RuntimeException("existed");
+            throw new AppException(ErrorCode.CATEGORY_EXISTED);
 
         Category category = mapper.toEntity(request);
 
@@ -47,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse update(Integer id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         mapper.update(category, request);
 
@@ -56,7 +59,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Integer id) {
-        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("not found"));
+        categoryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+
         categoryRepository.deleteById(id);
     }
 }
