@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,18 +71,16 @@ public class ProductController {
                 .build();
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "create new product")
     public ApiResponse<ProductResponse> create(@ModelAttribute @Valid ProductCreationRequest request) {
-        // @ModelAttribute có thể hứng được file còn @RequestBody thì không
-        // Chọn form data để nhập thay vì JSON
         return ApiResponse.<ProductResponse>builder()
                 .message("Create product successfully")
                 .data(productService.create(request))
                 .build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "update product by id")
     public ApiResponse<ProductResponse> update(
             @PathVariable Integer id,
