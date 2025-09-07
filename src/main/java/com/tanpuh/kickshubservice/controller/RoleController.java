@@ -1,6 +1,7 @@
 package com.tanpuh.kickshubservice.controller;
 
-import com.tanpuh.kickshubservice.dto.request.RoleRequest;
+import com.tanpuh.kickshubservice.dto.request.RoleCreationRequest;
+import com.tanpuh.kickshubservice.dto.request.RoleUpdateRequest;
 import com.tanpuh.kickshubservice.dto.response.ApiResponse;
 import com.tanpuh.kickshubservice.dto.response.RoleResponse;
 import com.tanpuh.kickshubservice.service.role.RoleService;
@@ -35,7 +36,7 @@ public class RoleController {
 
     @PostMapping
     @Operation(summary = "create new role")
-    ApiResponse<RoleResponse> create(@RequestBody @Valid RoleRequest request) {
+    ApiResponse<RoleResponse> create(@RequestBody @Valid RoleCreationRequest request) {
         return ApiResponse.<RoleResponse>builder()
                 .data(roleService.create(request))
                 .message("Create role successfully")
@@ -44,7 +45,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     @Operation(summary = "update role by id")
-    ApiResponse<RoleResponse> update( @PathVariable Integer id, @RequestBody @Valid RoleRequest request) {
+    ApiResponse<RoleResponse> update( @PathVariable Integer id, @RequestBody @Valid RoleUpdateRequest request) {
         return ApiResponse.<RoleResponse>builder()
                 .data(roleService.update(id, request))
                 .message("Update role successfully")

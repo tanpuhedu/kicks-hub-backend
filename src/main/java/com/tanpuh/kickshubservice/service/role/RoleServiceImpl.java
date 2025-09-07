@@ -1,6 +1,7 @@
 package com.tanpuh.kickshubservice.service.role;
 
-import com.tanpuh.kickshubservice.dto.request.RoleRequest;
+import com.tanpuh.kickshubservice.dto.request.RoleCreationRequest;
+import com.tanpuh.kickshubservice.dto.request.RoleUpdateRequest;
 import com.tanpuh.kickshubservice.dto.response.RoleResponse;
 import com.tanpuh.kickshubservice.entity.Permission;
 import com.tanpuh.kickshubservice.entity.Role;
@@ -36,7 +37,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleResponse create(RoleRequest request) {
+    public RoleResponse create(RoleCreationRequest request) {
+        if (roleRepository.existsByName(request.getName()))
+            throw new AppException(ErrorCode.ROLE_EXISTED);
+
         Role role = mapper.toEntity(request);
 
         List<Permission> permissions = permissionRepository.findAllById(request.getPermissionIds());
@@ -46,10 +50,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleResponse update(Integer id, RoleRequest request) {
+    public RoleResponse update(Integer id, RoleUpdateRequest request) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
-        mapper.update(role, request);
         var permissions = permissionRepository.findAllById(request.getPermissionIds());
         role.setPermissions(new HashSet<>(permissions));
 

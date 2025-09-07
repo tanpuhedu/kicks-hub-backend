@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleRequest {
+public class RoleCreationRequest {
     @NotBlank(message = "ROLE_NAME_BLANK")
     String name;
 
