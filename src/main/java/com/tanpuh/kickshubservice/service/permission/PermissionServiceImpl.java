@@ -33,7 +33,11 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public PermissionResponse create(PermissionRequest request) {
+        if (permissionRepository.existsByName(request.getName()))
+            throw new AppException(ErrorCode.PERMISSION_EXISTED);
+
         Permission permission = mapper.toEntity(request);
+
         return mapper.toResponse(permissionRepository.save(permission));
     }
 
