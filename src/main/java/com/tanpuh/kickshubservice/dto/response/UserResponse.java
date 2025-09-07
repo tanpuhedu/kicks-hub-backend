@@ -3,6 +3,8 @@ package com.tanpuh.kickshubservice.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -13,4 +15,5 @@ public class UserResponse {
     String phone;
     String email;
     Integer status;
+    Set<RoleResponse> roles;
 }

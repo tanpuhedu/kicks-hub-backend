@@ -25,11 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 @Service
@@ -76,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!isAuthenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(user.getUsername());
+        var token = generateToken(user);
 
         return new AuthenticationResponse(token, true);
     }
@@ -110,7 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
-        var token = generateToken(user.getUsername());
+        var token = generateToken(user);
 
         return new AuthenticationResponse(token, true);
     }
@@ -141,19 +143,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return signedJWT;
     }
 
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         // tạo header
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         // tạo claimset, các field trong payload gọi là claim
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("tanpuh.com") // xác định token này đc issue từ đâu, thông thường là domain của service
                 .issueTime(new Date())
                 .expirationTime(Date.from(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS)
                 ))
                 .jwtID(UUID.randomUUID().toString())
+                .claim("scope", buildScope(user))
                 .build();
 
         // tạo payload
@@ -170,5 +173,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.error("cannot generate token", e);
             throw new RuntimeException(e);
         }
+    }
+
+    /*
+        add prefix ROLE_ cho role, để phân biệt role và permission
+        vì cả 2 đều ở trong cùng field scope của token
+     */
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions().forEach(permission ->
+                            stringJoiner.add(permission.getName()));
+            });
+
+        return stringJoiner.toString();
     }
 }

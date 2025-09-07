@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +30,10 @@ public class UserController {
     @GetMapping
     @Operation(summary = "get list of users")
     public ApiResponse<List<UserResponse>> getAll() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Username: {}", authentication.getName());
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getAll())
                 .message("Get list of users successfully")
@@ -43,20 +49,30 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/my-info")
+    @Operation(summary = "get user's info")
+    public ApiResponse<UserResponse> getMyInfo() {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.getMyInfo())
+                .message("Get user's info successfully")
+                .build();
+    }
+
     @PostMapping
     @Operation(summary = "create new user")
-    public ApiResponse<UserResponse> create(@RequestBody @Valid UserCreationRequest dto) {
+    public ApiResponse<UserResponse> create(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
-                .data(userService.create(dto))
+                .data(userService.create(request))
                 .message("Create user successfully")
                 .build();
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update user by id")
-    public ApiResponse<UserResponse> update(@RequestBody @Valid UserUpdateRequest dto, @PathVariable Integer id) {
+    public ApiResponse<UserResponse> update(@PathVariable Integer id,
+                                            @RequestBody @Valid UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
-                .data(userService.update(dto, id))
+                .data(userService.update(id, request))
                 .message("Update user successfully")
                 .build();
     }

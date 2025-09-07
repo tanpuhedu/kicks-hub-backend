@@ -9,7 +9,8 @@ import java.util.List;
 public interface UserService {
     List<UserResponse> getAll();
     UserResponse getById(Integer id);
-    UserResponse create(UserCreationRequest dto);
-    UserResponse update(UserUpdateRequest dto, Integer id);
+    UserResponse getMyInfo();
+    UserResponse create(UserCreationRequest request);
+    UserResponse update(Integer id, UserUpdateRequest request);
     void delete(Integer id);
 }

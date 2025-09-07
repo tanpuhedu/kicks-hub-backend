@@ -1,11 +1,10 @@
 package com.tanpuh.kickshubservice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -23,4 +22,7 @@ public class User {
     String phone;
     String email;
     Integer status;
+
+    @ManyToMany
+    Set<Role> roles;
 }
