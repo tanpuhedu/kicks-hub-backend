@@ -4,6 +4,7 @@ import com.tanpuh.kickshubservice.dto.response.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -83,5 +84,17 @@ public class GlobalExceptionHandler {
             resolvedMessage = resolvedMessage.replace("{" + key + "}", value);
         }
         return resolvedMessage;
+    }
+
+    // catch exception: đúng token mà không có quyền truy cập
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handleAccessDeniedException() {
+        return ResponseEntity
+                .status(ErrorCode.UNAUTHORIZED.getStatusCode())
+                .body(ApiResponse.builder()
+                        .status(ErrorCode.UNAUTHORIZED.getCode())
+                        .message(ErrorCode.UNAUTHORIZED.getMessage())
+                        .build()
+                );
     }
 }

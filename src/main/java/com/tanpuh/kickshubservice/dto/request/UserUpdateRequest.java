@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Range;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    Integer id;
-
     @Size(min = 8, message = "USER_PASSWORD_INVALID")
     String password;
 
@@ -35,4 +35,6 @@ public class UserUpdateRequest {
     @NotNull(message = "USER_STATUS_NULL")
     @Range(min = 0, max = 1, message = "USER_STATUS_INVALID")
     Integer status;
+
+    List<Integer> roleIds;
 }

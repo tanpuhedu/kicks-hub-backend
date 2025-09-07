@@ -12,6 +12,7 @@ public enum ErrorCode {
     UNCATEGORIZED(9999, "An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR),
     KEY_INVALID(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1002, "Authentication is required", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1003, "You do not have permission", HttpStatus.FORBIDDEN),
 
     // CATEGORY ERROR
     CATEGORY_EXISTED(2001, "Category already existed", HttpStatus.BAD_REQUEST),
@@ -76,6 +77,18 @@ public enum ErrorCode {
     //  AUTH ERROR
     USERNAME_BLANK(8001, "Username is required", HttpStatus.BAD_REQUEST),
     PASSWORD_NULL(8002, "Password is required", HttpStatus.BAD_REQUEST),
+
+    //  PERMISSION ERROR
+    PERMISSION_EXISTED(9001, "Permission already existed", HttpStatus.BAD_REQUEST),
+    PERMISSION_NOT_FOUND(9002, "Permission not existed", HttpStatus.NOT_FOUND),
+    PERMISSION_NAME_BLANK(9003, "Permission name is required", HttpStatus.BAD_REQUEST),
+
+    //  ROLE ERROR
+    ROLE_EXISTED(10001, "Role already existed", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(10002, "Role not existed", HttpStatus.NOT_FOUND),
+    ROLE_NAME_BLANK(10003, "Role name is required", HttpStatus.BAD_REQUEST),
+    ROLE_PERMISSIONS_EMPTY(10004, "Role permission id list is required", HttpStatus.BAD_REQUEST),
+    ROLE_PERMISSION_ID_NULL(10005, "Role permission id is required", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;

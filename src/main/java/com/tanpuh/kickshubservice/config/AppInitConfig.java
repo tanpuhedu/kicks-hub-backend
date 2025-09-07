@@ -1,8 +1,11 @@
 package com.tanpuh.kickshubservice.config;
 
+import com.tanpuh.kickshubservice.entity.Role;
 import com.tanpuh.kickshubservice.entity.User;
+import com.tanpuh.kickshubservice.repository.RoleRepository;
 import com.tanpuh.kickshubservice.repository.UserRepository;
 import com.tanpuh.kickshubservice.utils.enums.EntityStatus;
+import com.tanpuh.kickshubservice.utils.enums.PredefinedRole;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +13,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.HashSet;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,12 +29,26 @@ public class AppInitConfig {
     static final String ADMIN_PASSWORD = "admin";
 
     @Bean
-    ApplicationRunner applicationRunner(UserRepository userRepository) {
+    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
             if (userRepository.findByUsername(ADMIN_USERNAME).isEmpty()) {
+                Role adminRole = Role.builder()
+                        .name(PredefinedRole.ADMIN.getName())
+                        .build();
+                roleRepository.save(adminRole);
+
+                Role userRole = Role.builder()
+                        .name(PredefinedRole.USER.getName())
+                        .build();
+                roleRepository.save(userRole);
+
+                var roles = new HashSet<Role>();
+                roles.add(adminRole);
+
                 User user = User.builder()
                         .username(ADMIN_USERNAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
+                        .roles(roles)
                         .status(EntityStatus.ACTIVE.getCode())
                         .build();
 
