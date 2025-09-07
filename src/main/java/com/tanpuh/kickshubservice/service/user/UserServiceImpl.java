@@ -3,11 +3,13 @@ package com.tanpuh.kickshubservice.service.user;
 import com.tanpuh.kickshubservice.dto.request.UserCreationRequest;
 import com.tanpuh.kickshubservice.dto.request.UserUpdateRequest;
 import com.tanpuh.kickshubservice.dto.response.UserResponse;
+import com.tanpuh.kickshubservice.entity.Cart;
 import com.tanpuh.kickshubservice.entity.Role;
 import com.tanpuh.kickshubservice.entity.User;
 import com.tanpuh.kickshubservice.exception.AppException;
 import com.tanpuh.kickshubservice.exception.ErrorCode;
 import com.tanpuh.kickshubservice.mapper.UserMapper;
+import com.tanpuh.kickshubservice.repository.CartRepository;
 import com.tanpuh.kickshubservice.repository.RoleRepository;
 import com.tanpuh.kickshubservice.repository.UserRepository;
 import com.tanpuh.kickshubservice.utils.enums.EntityStatus;
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
     UserMapper mapper;
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
+    CartRepository cartRepository;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -77,8 +80,15 @@ public class UserServiceImpl implements UserService {
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(PredefinedRole.USER.getId()).ifPresent(roles::add);
         user.setRoles(roles);
+        userRepository.save(user);
 
-        return mapper.toResponse(userRepository.save(user));
+        Cart cart = Cart.builder()
+                .totalQuantity(0)
+                .user(user)
+                .build();
+        cartRepository.save(cart);
+
+        return mapper.toResponse(user);
     }
 
     @Override
