@@ -13,7 +13,6 @@ public interface ProductDetailMapper {
     ProductDetail toEntity(ProductDetailCreationRequest dto);
     ProductDetailResponse toResponse(ProductDetail entity);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "stockQuantity", ignore = true)
     void update(@MappingTarget ProductDetail entity, ProductDetailUpdateRequest dto);
 }
