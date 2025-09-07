@@ -12,6 +12,7 @@ public enum ErrorCode {
     UNCATEGORIZED(9999, "An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR),
     KEY_INVALID(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1002, "Authentication is required", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1003, "You do not have permission", HttpStatus.FORBIDDEN),
 
     // CATEGORY ERROR
     CATEGORY_EXISTED(2001, "Category already existed", HttpStatus.BAD_REQUEST),
