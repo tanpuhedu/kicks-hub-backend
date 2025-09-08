@@ -53,13 +53,15 @@ public enum ErrorCode {
     PRODUCT_DETAIL_STOCK_QUANTITY_NEGATIVE(6008,
             "Product detail stock quantity must be greater than or equal to 0",
             HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_STATUS_NULL(6009, "Product detail status is required",HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_STATUS_INVALID(6010,
+    PRODUCT_DETAIL_STOCK_QUANTITY_INSUFFICIENT
+            (6009, "Product detail stock quantity is insufficient",HttpStatus.CONFLICT),
+    PRODUCT_DETAIL_STATUS_NULL(6010, "Product detail status is required",HttpStatus.BAD_REQUEST),
+    PRODUCT_DETAIL_STATUS_INVALID(6011,
             "Product detail status must be {min} (INACTIVE) or {max} (ACTIVE)",
             HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_PRODUCT_NULL(6011, "Product detail's product is required",HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_SIZE_NULL(6012, "Product detail's size is required",HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_COLOR_NULL(6013, "Product detail's color is required",HttpStatus.BAD_REQUEST),
+    PRODUCT_DETAIL_PRODUCT_NULL(6012, "Product detail's product is required",HttpStatus.BAD_REQUEST),
+    PRODUCT_DETAIL_SIZE_NULL(6013, "Product detail's size is required",HttpStatus.BAD_REQUEST),
+    PRODUCT_DETAIL_COLOR_NULL(6014, "Product detail's color is required",HttpStatus.BAD_REQUEST),
 
     //  USER ERROR
     USER_EXISTED(7001, "User already existed", HttpStatus.BAD_REQUEST),
@@ -89,6 +91,15 @@ public enum ErrorCode {
     ROLE_NAME_BLANK(10003, "Role name is required", HttpStatus.BAD_REQUEST),
     ROLE_PERMISSIONS_EMPTY(10004, "Role permission id list is required", HttpStatus.BAD_REQUEST),
     ROLE_PERMISSION_ID_NULL(10005, "Role permission id is required", HttpStatus.BAD_REQUEST),
+
+    //  CART ITEM ERROR
+    CART_ITEM_NOT_FOUND(11001, "Cart item not existed", HttpStatus.NOT_FOUND),
+    CART_ITEM_QUANTITY_NULL(11002, "Cart item quantity is required", HttpStatus.BAD_REQUEST),
+    CART_ITEM_QUANTITY_NEGATIVE
+            (11003, "Cart item quantity must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
+
+    //  CART ERROR
+    CART_NOT_FOUND(12001, "Cart not existed", HttpStatus.NOT_FOUND),
     ;
 
     private final Integer code;
