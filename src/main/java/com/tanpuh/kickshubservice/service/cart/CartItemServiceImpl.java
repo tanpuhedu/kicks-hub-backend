@@ -22,14 +22,16 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartItemServiceImpl implements CartItemService {
     CartItemRepository cartItemRepository;
     CartRepository cartRepository;
-    CartItemMapper cartItemMapper;
     ProductDetailRepository productDetailRepository;
+    CartItemMapper cartItemMapper;
     UserRepository userRepository;
     UserMapper userMapper;
 
@@ -40,10 +42,18 @@ public class CartItemServiceImpl implements CartItemService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         Cart cart = cartRepository.findByUser(user);
+
+        List<CartItemResponse> cartItemResponses = cart.getCartItems()
+                .stream()
+                .map(cartItemMapper::toResponse)
+                .peek(r -> r.setCartId(cart.getId()))
+                .toList();
+
         return CartResponse.builder()
                 .id(cart.getId())
                 .totalQuantity(cart.getTotalQuantity())
                 .user(userMapper.toResponse(user))
+                .cartItems(cartItemResponses)
                 .build();
     }
 
