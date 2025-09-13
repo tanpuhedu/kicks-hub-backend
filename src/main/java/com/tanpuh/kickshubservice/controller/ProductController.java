@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,30 +22,32 @@ import java.util.List;
 @RequestMapping("/products")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Product Controller")
+@CrossOrigin(origins = "http://localhost:5173")
+@Slf4j
 public class ProductController {
     ProductService productService;
 
-//    @GetMapping
-//    public ApiResponse<List<ProductResponse>> getAll(){
-//        return ApiResponse.<List<ProductResponse>>builder()
-//                .data(productService.getAll())
-//                .message("Get list of products successfully")
-//                .build();
-//    }
-
     @GetMapping
-    @Operation(summary = "get list of products by criteria")
-    public ApiResponse<List<ProductResponse>> getAllByCriteria(
-            @RequestParam(value = "sortBy", required = false) List<String> sortBy,
-            @RequestParam(value = "sortDir", required = false) String sortDir,
-            @RequestParam(value = "pageIdx", required = false) Integer pageIdx,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize
-    ) {
+    public ApiResponse<List<ProductResponse>> getAll(){
         return ApiResponse.<List<ProductResponse>>builder()
-                .data(productService.getAllByCriteria(sortBy, sortDir, pageIdx, pageSize))
-                .message("Get list of products by criteria successfully")
+                .data(productService.getAll())
+                .message("Get list of products successfully")
                 .build();
     }
+
+//    @GetMapping
+//    @Operation(summary = "get list of products by criteria")
+//    public ApiResponse<List<ProductResponse>> getAllByCriteria(
+//            @RequestParam(value = "sortBy", required = false) List<String> sortBy,
+//            @RequestParam(value = "sortDir", required = false) String sortDir,
+//            @RequestParam(value = "pageIdx", required = false) Integer pageIdx,
+//            @RequestParam(value = "pageSize", required = false) Integer pageSize
+//    ) {
+//        return ApiResponse.<List<ProductResponse>>builder()
+//                .data(productService.getAllByCriteria(sortBy, sortDir, pageIdx, pageSize))
+//                .message("Get list of products by criteria successfully")
+//                .build();
+//    }
 
     @GetMapping("/{id}")
     @Operation(summary = "get product by id")
