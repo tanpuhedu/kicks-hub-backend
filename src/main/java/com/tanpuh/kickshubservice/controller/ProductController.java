@@ -3,6 +3,7 @@ package com.tanpuh.kickshubservice.controller;
 import com.tanpuh.kickshubservice.dto.request.ProductCreationRequest;
 import com.tanpuh.kickshubservice.dto.request.ProductUpdateRequest;
 import com.tanpuh.kickshubservice.dto.response.ApiResponse;
+import com.tanpuh.kickshubservice.dto.response.PageResponse;
 import com.tanpuh.kickshubservice.dto.response.ProductResponse;
 import com.tanpuh.kickshubservice.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +38,7 @@ public class ProductController {
 
     @GetMapping("/storefront/products")
     @Operation(summary = "get list of products by criteria")
-    public ApiResponse<Page<ProductResponse>> getAllByCriteria(
+    public ApiResponse<PageResponse<ProductResponse>> getAllByCriteria(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false) List<Integer> colorIds,
@@ -49,7 +49,7 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int pageIdx,
             @RequestParam(defaultValue = "10") int pageLimit
     ) {
-        return ApiResponse.<Page<ProductResponse>>builder()
+        return ApiResponse.<PageResponse<ProductResponse>>builder()
                 .data(productService.getAllByCriteria(
                         keyword, categoryIds, colorIds, minPrice, maxPrice, sortBy, sortDir, pageIdx, pageLimit))
                 .message("Get list of products by criteria successfully")
