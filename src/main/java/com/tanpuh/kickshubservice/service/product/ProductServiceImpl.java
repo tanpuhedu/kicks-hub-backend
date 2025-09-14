@@ -45,38 +45,29 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    @Override
-    public List<ProductResponse> getAllByCriteria(List<String> sortBy, String sortDir,
-                                                  Integer pageIdx, Integer pageSize) {
-        pageIdx = (pageIdx == null) ? 0 : pageIdx;
-        pageSize = (pageSize == null) ? 5 : pageSize;
+    public Page<ProductResponse> getAllByCriteria (
+            String keyword,
+            List<Integer> categoryIds, List<Integer> colorIds,
+            Long minPrice, Long maxPrice,
+            String sortBy, String sortDir,
+            int pageIdx, int pageLimit
+    ) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
 
-        Pageable pageable;
+        Pageable pageable = PageRequest.of(pageIdx, pageLimit, sort);
 
-        if (sortBy == null || sortBy.isEmpty()) {
-            // Nếu không có tham số sortBy -> mặc định sort theo id
-            pageable = PageRequest.of(pageIdx, pageSize, Sort.Direction.valueOf(sortDir.toUpperCase()), "id");
-        } else {
-            // Ghép nhiều tiêu chí
-            // Nếu không truyền sortDir thì mặc định ASC
-            Sort.Direction direction = (sortDir != null && sortDir.equalsIgnoreCase("desc"))
-                    ? Sort.Direction.DESC
-                    : Sort.Direction.ASC;
+        Page<Product> products = productRepository.getAllByCriteria(
+                keyword,
+                categoryIds == null || categoryIds.isEmpty() ? null : categoryIds,
+                colorIds == null || colorIds.isEmpty() ? null : colorIds,
+                minPrice,
+                maxPrice,
+                pageable
+        );
 
-            // Áp dụng cùng 1 sortDir cho tất cả field trong sortBy
-            List<Sort.Order> orders = sortBy
-                    .stream()
-                    .map(field -> new Sort.Order(direction, field))
-                    .toList();
-            pageable = PageRequest.of(pageIdx, pageSize, Sort.by(orders));
-        }
-
-        Page<Product> pageEntity = productRepository.findAll(pageable);
-
-        return pageEntity.getContent()
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+        return products.map(mapper::toResponse);
     }
 
     @Override
@@ -88,10 +79,12 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> pageEntity = productRepository
                 .search(name, code, categoryId, PageRequest.of(pageIdx, pageSize));
 
-        return pageEntity.getContent() // pageEntity.getContent() return List<T> T là sản phẩm được lấy ra
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+//        return pageEntity.getContent() // pageEntity.getContent() return List<T> T là sản phẩm được lấy ra
+//                .stream()
+//                .map(mapper::toResponse)
+//                .toList();
+
+        return pageEntity.map(mapper::toResponse).toList();
     }
 
     @Override
