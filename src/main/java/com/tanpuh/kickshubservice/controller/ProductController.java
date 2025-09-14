@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/products")
+@RequestMapping()
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Product Controller")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -27,7 +28,7 @@ import java.util.List;
 public class ProductController {
     ProductService productService;
 
-    @GetMapping
+    @GetMapping("/backoffice/products")
     public ApiResponse<List<ProductResponse>> getAll(){
         return ApiResponse.<List<ProductResponse>>builder()
                 .data(productService.getAll())
@@ -35,21 +36,27 @@ public class ProductController {
                 .build();
     }
 
-//    @GetMapping
-//    @Operation(summary = "get list of products by criteria")
-//    public ApiResponse<List<ProductResponse>> getAllByCriteria(
-//            @RequestParam(value = "sortBy", required = false) List<String> sortBy,
-//            @RequestParam(value = "sortDir", required = false) String sortDir,
-//            @RequestParam(value = "pageIdx", required = false) Integer pageIdx,
-//            @RequestParam(value = "pageSize", required = false) Integer pageSize
-//    ) {
-//        return ApiResponse.<List<ProductResponse>>builder()
-//                .data(productService.getAllByCriteria(sortBy, sortDir, pageIdx, pageSize))
-//                .message("Get list of products by criteria successfully")
-//                .build();
-//    }
+    @GetMapping("/storefront/products")
+    @Operation(summary = "get list of products by criteria")
+    public ApiResponse<Page<ProductResponse>> getAllByCriteria(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) List<Integer> categoryIds,
+            @RequestParam(required = false) List<Integer> colorIds,
+            @RequestParam(required = false) Long minPrice,
+            @RequestParam(required = false) Long maxPrice,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortDir,
+            @RequestParam(defaultValue = "0") int pageIdx,
+            @RequestParam(defaultValue = "10") int pageLimit
+    ) {
+        return ApiResponse.<Page<ProductResponse>>builder()
+                .data(productService.getAllByCriteria(
+                        keyword, categoryIds, colorIds, minPrice, maxPrice, sortBy, sortDir, pageIdx, pageLimit))
+                .message("Get list of products by criteria successfully")
+                .build();
+    }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = {"/backoffice/products/{id}", "/storefront/products/{id}"})
     @Operation(summary = "get product by id")
     public ApiResponse<ProductResponse> getById(@PathVariable Integer id) {
         return ApiResponse.<ProductResponse>builder()
@@ -58,10 +65,9 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/storefront/search")
     @Operation(summary = "search product with keyword")
     public ApiResponse<List<ProductResponse>> search(
-//            required = false là từ khoá có thể truyền vào hoặc không truyền vào, cho phép null
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -74,7 +80,7 @@ public class ProductController {
                 .build();
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/backoffice/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "create new product")
     public ApiResponse<ProductResponse> create(@ModelAttribute @Valid ProductCreationRequest request) {
         return ApiResponse.<ProductResponse>builder()
@@ -83,7 +89,7 @@ public class ProductController {
                 .build();
     }
 
-    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/backoffice/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "update product by id")
     public ApiResponse<ProductResponse> update(
             @PathVariable Integer id,
@@ -95,7 +101,7 @@ public class ProductController {
                 .build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/backoffice/products/{id}")
     @Operation(summary = "delete product by id")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         productService.delete(id);

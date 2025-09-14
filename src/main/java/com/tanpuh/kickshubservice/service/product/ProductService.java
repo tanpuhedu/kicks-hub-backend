@@ -3,12 +3,15 @@ package com.tanpuh.kickshubservice.service.product;
 import com.tanpuh.kickshubservice.dto.request.ProductCreationRequest;
 import com.tanpuh.kickshubservice.dto.request.ProductUpdateRequest;
 import com.tanpuh.kickshubservice.dto.response.ProductResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface ProductService {
     List<ProductResponse> getAll();
-    List<ProductResponse> getAllByCriteria(List<String> sortBy, String sortDir, Integer pageIdx, Integer pageSize);
+    Page<ProductResponse> getAllByCriteria(String keyword, List<Integer> categoryIds, List<Integer> colorIds,
+                                           Long minPrice, Long maxPrice, String sortBy, String sortDir,
+                                           int pageIdx, int pageLimit);
     List<ProductResponse> search(String name, String code, Integer categoryId, Integer pageIdx, Integer pageSize);
     ProductResponse getById(Integer id);
     ProductResponse create(ProductCreationRequest request);
