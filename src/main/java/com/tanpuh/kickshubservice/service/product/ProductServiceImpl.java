@@ -122,11 +122,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-
         mapper.update(product, request);
-        product.setCategory(category);
         product.setImgURLs(uploadImagesToCloudinary(request.getImgFiles()));
 
         return mapper.toResponse(productRepository.save(product));

@@ -95,22 +95,13 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         ProductDetail productDetail = productDetailRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
 
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-
-        Size size = sizeRepository.findById(request.getSizeId())
-                .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_FOUND));
-
-        Color color = colorRepository.findById(request.getColorId())
-                .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND));
-
         mapper.update(productDetail, request);
-        productDetail.setProduct(product);
-        productDetail.setSize(size);
-        productDetail.setColor(color);
+
         // xử lí stockQty của product detail
         productDetail.setStockQuantity(productDetail.getStockQuantity() + request.getStockQuantity());
         productDetailRepository.save(productDetail);
+
+        Product product = productDetail.getProduct();
 
         // xử lí stockQty của product
         product.setStockQuantity(product.getStockQuantity() + request.getStockQuantity());
@@ -123,7 +114,6 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         // xử lí price của product
         Long minPrice = updateProductPrice(product);
         product.setPrice(minPrice);
-
         productRepository.save(product);
 
         return mapper.toResponse(productDetail);
