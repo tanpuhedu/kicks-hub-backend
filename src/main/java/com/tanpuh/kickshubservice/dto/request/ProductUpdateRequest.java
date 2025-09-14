@@ -22,9 +22,6 @@ public class ProductUpdateRequest {
     @Range(min = 0, max = 1, message = "PRODUCT_STATUS_INVALID")
     Integer status;
 
-    @NotNull(message = "PRODUCT_CATEGORY_NULL")
-    Integer categoryId;
-
     @NotNull(message = "PRODUCT_FILES_NULL")
     List<MultipartFile> imgFiles;
 }

@@ -29,13 +29,4 @@ public class ProductDetailUpdateRequest {
     @NotNull(message = "PRODUCT_DETAIL_STATUS_NULL")
     @Range(min = 0, max = 1, message = "PRODUCT_DETAIL_STATUS_INVALID")
     Integer status;
-
-    @NotNull(message = "PRODUCT_DETAIL_PRODUCT_NULL")
-    Integer productId;
-
-    @NotNull(message = "PRODUCT_DETAIL_COLOR_NULL")
-    Integer colorId;
-
-    @NotNull(message = "PRODUCT_DETAIL_SIZE_NULL")
-    Integer sizeId;
 }
