@@ -2,6 +2,7 @@ package com.tanpuh.kickshubservice.service.product;
 
 import com.tanpuh.kickshubservice.dto.request.ProductCreationRequest;
 import com.tanpuh.kickshubservice.dto.request.ProductUpdateRequest;
+import com.tanpuh.kickshubservice.dto.response.PageResponse;
 import com.tanpuh.kickshubservice.dto.response.ProductResponse;
 import com.tanpuh.kickshubservice.entity.Category;
 import com.tanpuh.kickshubservice.entity.Product;
@@ -45,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    public Page<ProductResponse> getAllByCriteria (
+    public PageResponse<ProductResponse> getAllByCriteria (
             String keyword,
             List<Integer> categoryIds, List<Integer> colorIds,
             Long minPrice, Long maxPrice,
@@ -67,7 +68,9 @@ public class ProductServiceImpl implements ProductService {
                 pageable
         );
 
-        return products.map(mapper::toResponse);
+        Page<ProductResponse> productResponses = products.map(mapper::toResponse);
+
+        return PageResponse.from(productResponses);
     }
 
     @Override
