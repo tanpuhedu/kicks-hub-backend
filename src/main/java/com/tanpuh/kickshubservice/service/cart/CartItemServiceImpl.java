@@ -10,7 +10,7 @@ import com.tanpuh.kickshubservice.entity.User;
 import com.tanpuh.kickshubservice.exception.AppException;
 import com.tanpuh.kickshubservice.exception.ErrorCode;
 import com.tanpuh.kickshubservice.mapper.CartItemMapper;
-import com.tanpuh.kickshubservice.mapper.UserMapper;
+import com.tanpuh.kickshubservice.mapper.CartMapper;
 import com.tanpuh.kickshubservice.repository.CartItemRepository;
 import com.tanpuh.kickshubservice.repository.CartRepository;
 import com.tanpuh.kickshubservice.repository.ProductDetailRepository;
@@ -32,8 +32,8 @@ public class CartItemServiceImpl implements CartItemService {
     CartRepository cartRepository;
     ProductDetailRepository productDetailRepository;
     CartItemMapper cartItemMapper;
+    CartMapper cartMapper;
     UserRepository userRepository;
-    UserMapper userMapper;
 
     @Override
     public CartResponse getCartByUsername() {
@@ -43,18 +43,16 @@ public class CartItemServiceImpl implements CartItemService {
 
         Cart cart = cartRepository.findByUser(user);
 
-        List<CartItemResponse> cartItemResponses = cart.getCartItems()
+        List<CartItemResponse> cartItemResponses = cartItemRepository.findAllByCartId(cart.getId())
                 .stream()
                 .map(cartItemMapper::toResponse)
                 .peek(r -> r.setCartId(cart.getId()))
                 .toList();
 
-        return CartResponse.builder()
-                .id(cart.getId())
-                .totalQuantity(cart.getTotalQuantity())
-                .user(userMapper.toResponse(user))
-                .cartItems(cartItemResponses)
-                .build();
+        CartResponse cartResponse = cartMapper.toResponse(cart);
+        cartResponse.setCartItems(cartItemResponses);
+
+        return cartResponse;
     }
 
     @Override
@@ -68,7 +66,10 @@ public class CartItemServiceImpl implements CartItemService {
 
         CartItem cartItem = performAddToCart(request, cart, productDetail);
 
-        return cartItemMapper.toResponse(cartItem);
+        CartItemResponse cartItemResponse = cartItemMapper.toResponse(cartItem);
+        cartItemResponse.setCartId(cart.getId());
+
+        return cartItemResponse;
     }
 
     @Override
