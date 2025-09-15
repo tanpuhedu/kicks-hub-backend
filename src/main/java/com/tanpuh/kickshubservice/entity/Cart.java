@@ -1,12 +1,8 @@
 package com.tanpuh.kickshubservice.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -22,9 +18,4 @@ public class Cart {
 
     @OneToOne
     User user;
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @Builder.Default
-    List<CartItem> cartItems = new ArrayList<>();
 }

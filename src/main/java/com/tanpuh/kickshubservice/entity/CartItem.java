@@ -1,6 +1,5 @@
 package com.tanpuh.kickshubservice.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +19,6 @@ public class CartItem {
     @ManyToOne
     ProductDetail productDetail;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @ManyToOne
     Cart cart;
 }
